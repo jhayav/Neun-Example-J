@@ -20,6 +20,24 @@ You can now run ``make`` to generate the executable files
    
     make 
 
+After make you should have a new file HR. You can try running it doing
+
+    ./HR 
+
+Include arguments to generate your first model, for example:
+
+    ./HR test.dat 10000 0.01
+
+And you can visualize it by running:
+
+    python ../plot.py test.dat
+
+Note that you may need to install some common package for using python. You can create an environment by doing this:
+  
+    python -m venv neun-py-env
+    source neun-py-env/bin/activate
+    pip install -r ../requirements.txt
+
 ## Including your own cpp
 Use template.cpp to generate the model you prefer. You will need to choose:
 
