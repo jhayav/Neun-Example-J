@@ -80,15 +80,15 @@ int main(int argc, char **argv) {
   // Initialize neuron model parameters
   HR::ConstructorArgs args;
 
-  args.params[HR::e] = 3.281;
-  args.params[HR::mu] = 0.0029;
+  args.params[HR::e] = 0; // external current
+  args.params[HR::mu] = 0.006;
   args.params[HR::S] = 4;
   args.params[HR::a] = 1;
   args.params[HR::b] = 3;
   args.params[HR::c] = 1;
   args.params[HR::d] = 5;
   args.params[HR::xr] = -1.6;
-  args.params[HR::vh] = 1;
+  args.params[HR::vh] = 1; // parameter for chaotic hyperpolarization
 
   HR h1(args);
   h1.set(HR::x, -0.712841);
@@ -108,6 +108,7 @@ int main(int argc, char **argv) {
 
   // Simulation loop
   for (double time = 0; time < simulation_time; time += step) {
+      h1.add_synaptic_input(2.5);
       h1.step(step);
 
       out << time << " "
