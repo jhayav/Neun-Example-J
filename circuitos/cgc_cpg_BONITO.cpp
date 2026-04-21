@@ -1,42 +1,23 @@
 /*************************************************************
- * cpg_completo.cpp - CPG Completo de Alimentación de Lymnaea
+ * cgc_cpg.cpp - CPG Completo + CGC (Cerebral Giant Cell)
  * 
- * Reproduce la Figura 4C del paper Vavoulis et al. (2007):
- * "Dynamic control of a central pattern generator circuit"
+ * Extiende el circuito CPG trifásico (SO, N1M, N2v, N3t)
+ * añadiendo la neurona modulatoria CGC.
  * 
- * Red completa SO-driven:
+ * Conexiones CGC (Benjamin, 2012):
+ *   CGC -----(excitación monosináptica)----> N1M
+ *   CGC -----(excitación polisináptica)----> N2v
+ *   CGC -----(excitación monosináptica)----> SO
+ *   CGC -----(excitación monosináptica)----> N3t
  * 
- *        SO -----(excitación)----> N1M
- *        SO -----(excitación)----> N2v
- *        SO <----(inhibición)----- N2v
- * 
- *       N1M -----(excitación)----> N2v
- *       N1M <----(inhibición)----- N2v
- * 
- *       N1M -----(inhibición)----> N3t
- *       N1M <----(inhibición)----- N3t
- * 
- *       N2v -----(inhibición)----> N3t
- * 
- * El SO (Slow Oscillator) es una interneurona moduladora que:
- * - Controla la FRECUENCIA del ritmo de alimentación
- * - Es EXTRÍNSECA al CPG (no es necesaria para el patrón básico)
- * - Cuando está activa, produce ritmos de alta frecuencia (3-6s)
- * - Es inhibida durante la fase R por N2v
- * 
- * Parámetros sinápticos (Tabla 2, Vavoulis 2007):
- * 
- * SINAPSIS DEL CPG TRIFÁSICO:
- * - N1M -> N2v: Excitatoria lenta, g_syn = 0.077, E_syn = 0 mV, tau = 200 ms
- * - N2v -> N1M: Inhibitoria fuerte, g_syn = 50.0, E_syn = -90 mV, tau = 50 ms
- * - N1M -> N3t: Inhibitoria, g_syn = 5.0, E_syn = -90 mV, tau = 50 ms
- * - N3t -> N1M: Inhibitoria, g_syn = 8.0, E_syn = -90 mV, tau = 50 ms
- * - N2v -> N3t: Inhibitoria, g_syn = 2.0, E_syn = -90 mV, tau = 50 ms
+ * La CGC es una neurona modulatoria que modula la actividad
+ * del CPG de alimentación de Lymnaea stagnalis.
  * 
  *************************************************************/
 
 #include <DifferentialNeuronWrapper.h>
 #include <VavoulisModel.h>
+#include <VavoulisCGCModel.h>
 #include <GradualActivationSynapsis.h>
 #include <RungeKutta4.h>
 #include <SystemWrapper.h>
@@ -44,7 +25,9 @@
 
 typedef RungeKutta4 Integrator;
 typedef DifferentialNeuronWrapper<SystemWrapper<VavoulisModel<double>>, Integrator> Neuron;
+typedef DifferentialNeuronWrapper<SystemWrapper<VavoulisCGCModel<double>>, Integrator> CGCNeuron;
 typedef GradualActivationSynapsis<Neuron, Neuron, Integrator, double> Synapse;
+typedef GradualActivationSynapsis<CGCNeuron, Neuron, Integrator, double> CGCSynapse;
 
 int main(int argc, char **argv) {
   
@@ -122,6 +105,90 @@ int main(int argc, char **argv) {
   so.set(Neuron::q, 0.0);    // No usado para SO
   so.set(Neuron::h, 1 / (1 + exp((-55.2 - (-67.0))/-7.1)));
   so.set(Neuron::n, 1.0 / (1.0 + exp((-30.0 - (-67.0)) / 17.4)));
+
+  // CONFIGURACIÓN DE CGC (Cerebral Giant Cell - Neurona Modulatoria)
+  // Modelo VavoulisCGCModel: 1 compartimento, 6 corrientes iónicas
+  // Variables: v, h, r, a, b, n, e, f
+  // Conexiones basadas en Benjamin (2012)
+  CGCNeuron::ConstructorArgs args_cgc;
+
+  // Capacitancia y potenciales de reversión
+  args_cgc.params[CGCNeuron::cm]  = 0.00;
+  args_cgc.params[CGCNeuron::vna] = 0.00;
+  args_cgc.params[CGCNeuron::vk]  = 0.00;
+  args_cgc.params[CGCNeuron::vca] = 0.00;
+
+  // Conductancias máximas
+  args_cgc.params[CGCNeuron::Gnat] = 0.00;
+  args_cgc.params[CGCNeuron::Gnap] = 0.00;
+  args_cgc.params[CGCNeuron::Ga]   = 0.00;
+  args_cgc.params[CGCNeuron::Gd]   = 0.00;
+  args_cgc.params[CGCNeuron::Glva] = 0.00;
+  args_cgc.params[CGCNeuron::Ghva] = 0.00;
+
+  // h: inactivación Na transitorio
+  args_cgc.params[CGCNeuron::vh_h]    = 0.00;
+  args_cgc.params[CGCNeuron::vs_h]    = 0.00;
+  args_cgc.params[CGCNeuron::tau0_h]  = 0.00;
+  args_cgc.params[CGCNeuron::delta_h] = 0.00;
+
+  // r: activación Na persistente
+  args_cgc.params[CGCNeuron::vh_r]    = 0.00;
+  args_cgc.params[CGCNeuron::vs_r]    = 0.00;
+  args_cgc.params[CGCNeuron::tau0_r]  = 0.00;
+  args_cgc.params[CGCNeuron::delta_r] = 0.00;
+
+  // a: activación K tipo A
+  args_cgc.params[CGCNeuron::vh_a]    = 0.00;
+  args_cgc.params[CGCNeuron::vs_a]    = 0.00;
+  args_cgc.params[CGCNeuron::tau0_a]  = 0.00;
+  args_cgc.params[CGCNeuron::delta_a] = 0.00;
+
+  // b: inactivación K tipo A
+  args_cgc.params[CGCNeuron::vh_b]    = 0.00;
+  args_cgc.params[CGCNeuron::vs_b]    = 0.00;
+  args_cgc.params[CGCNeuron::tau0_b]  = 0.00;
+  args_cgc.params[CGCNeuron::delta_b] = 0.00;
+
+  // n: activación K rectificador retardado
+  args_cgc.params[CGCNeuron::vh_n]    = 0.00;
+  args_cgc.params[CGCNeuron::vs_n]    = 0.00;
+  args_cgc.params[CGCNeuron::tau0_n]  = 0.00;
+  args_cgc.params[CGCNeuron::delta_n] = 0.00;
+
+  // e: activación Ca alto umbral (HVA)
+  args_cgc.params[CGCNeuron::vh_e]    = 0.00;
+  args_cgc.params[CGCNeuron::vs_e]    = 0.00;
+  args_cgc.params[CGCNeuron::tau0_e]  = 0.00;
+  args_cgc.params[CGCNeuron::delta_e] = 0.00;
+
+  // f: inactivación Ca alto umbral (HVA)
+  args_cgc.params[CGCNeuron::vh_f]    = 0.00;
+  args_cgc.params[CGCNeuron::vs_f]    = 0.00;
+  args_cgc.params[CGCNeuron::tau0_f]  = 0.00;
+  args_cgc.params[CGCNeuron::delta_f] = 0.00;
+
+  // m: activación Na transitorio (instantánea)
+  args_cgc.params[CGCNeuron::Vh_m] = 0.00;
+  args_cgc.params[CGCNeuron::Vs_m] = 0.00;
+
+  // c, d: activación/inactivación Ca bajo umbral LVA (instantáneas)
+  args_cgc.params[CGCNeuron::Vh_c] = 0.00;
+  args_cgc.params[CGCNeuron::Vs_c] = 0.00;
+  args_cgc.params[CGCNeuron::Vh_d] = 0.00;
+  args_cgc.params[CGCNeuron::Vs_d] = 0.00;
+
+  CGCNeuron cgc(args_cgc);
+
+  // Condiciones iniciales CGC
+  cgc.set(CGCNeuron::v, 0.00);
+  cgc.set(CGCNeuron::h, 0.00);
+  cgc.set(CGCNeuron::r, 0.00);
+  cgc.set(CGCNeuron::a, 0.00);
+  cgc.set(CGCNeuron::b, 0.00);
+  cgc.set(CGCNeuron::n, 0.00);
+  cgc.set(CGCNeuron::e, 0.00);
+  cgc.set(CGCNeuron::f, 0.00);
 
   // SINAPSIS DEL CPG TRIFÁSICO
   
@@ -207,6 +274,49 @@ int main(int argc, char **argv) {
   syn_so_to_n2v.params[Synapse::dec_slope] = 2.5;
   Synapse s_so_n2v(so, Neuron::v, n2v, Neuron::v, syn_so_to_n2v, 1);
 
+  // SINAPSIS DE CGC (Benjamin, 2012)
+  // La CGC es una neurona modulatoria que usa sinapsis GradualActivation
+
+  // Sinapsis CGC -> N1M (EXCITATORIA MONOSINÁPTICA)
+  CGCSynapse::ConstructorArgs syn_cgc_to_n1m;
+  syn_cgc_to_n1m.params[CGCSynapse::esyn] = 0.00;
+  syn_cgc_to_n1m.params[CGCSynapse::gsyn] = 0.00;
+  syn_cgc_to_n1m.params[CGCSynapse::tau_syn] = 0.00;
+  syn_cgc_to_n1m.params[CGCSynapse::v_pre] = 0.00;
+  syn_cgc_to_n1m.params[CGCSynapse::v_r] = 0.00;
+  syn_cgc_to_n1m.params[CGCSynapse::dec_slope] = 0.00;
+  CGCSynapse s_cgc_n1m(cgc, CGCNeuron::v, n1m, Neuron::v, syn_cgc_to_n1m, 1);
+
+  // Sinapsis CGC -> N2v (EXCITATORIA POLISINÁPTICA)
+  CGCSynapse::ConstructorArgs syn_cgc_to_n2v;
+  syn_cgc_to_n2v.params[CGCSynapse::esyn] = 0.00;
+  syn_cgc_to_n2v.params[CGCSynapse::gsyn] = 0.00;
+  syn_cgc_to_n2v.params[CGCSynapse::tau_syn] = 0.00;
+  syn_cgc_to_n2v.params[CGCSynapse::v_pre] = 0.00;
+  syn_cgc_to_n2v.params[CGCSynapse::v_r] = 0.00;
+  syn_cgc_to_n2v.params[CGCSynapse::dec_slope] = 0.00;
+  CGCSynapse s_cgc_n2v(cgc, CGCNeuron::v, n2v, Neuron::v, syn_cgc_to_n2v, 1);
+
+  // Sinapsis CGC -> SO (EXCITATORIA MONOSINÁPTICA)
+  CGCSynapse::ConstructorArgs syn_cgc_to_so;
+  syn_cgc_to_so.params[CGCSynapse::esyn] = 0.00;
+  syn_cgc_to_so.params[CGCSynapse::gsyn] = 0.00;
+  syn_cgc_to_so.params[CGCSynapse::tau_syn] = 0.00;
+  syn_cgc_to_so.params[CGCSynapse::v_pre] = 0.00;
+  syn_cgc_to_so.params[CGCSynapse::v_r] = 0.00;
+  syn_cgc_to_so.params[CGCSynapse::dec_slope] = 0.00;
+  CGCSynapse s_cgc_so(cgc, CGCNeuron::v, so, Neuron::v, syn_cgc_to_so, 1);
+
+  // Sinapsis CGC -> N3t (EXCITATORIA MONOSINÁPTICA)
+  CGCSynapse::ConstructorArgs syn_cgc_to_n3t;
+  syn_cgc_to_n3t.params[CGCSynapse::esyn] = 0.00;
+  syn_cgc_to_n3t.params[CGCSynapse::gsyn] = 0.00;
+  syn_cgc_to_n3t.params[CGCSynapse::tau_syn] = 0.00;
+  syn_cgc_to_n3t.params[CGCSynapse::v_pre] = 0.00;
+  syn_cgc_to_n3t.params[CGCSynapse::v_r] = 0.00;
+  syn_cgc_to_n3t.params[CGCSynapse::dec_slope] = 0.00;
+  CGCSynapse s_cgc_n3t(cgc, CGCNeuron::v, n3t, Neuron::v, syn_cgc_to_n3t, 1);
+
   // PARÁMETROS DE SIMULACIÓN
   const double step = 0.01;              // Paso de integración (ms)
   const double simulation_time = 10000;  // 10 segundos
@@ -218,9 +328,10 @@ int main(int argc, char **argv) {
   // Drive a SO: controla la frecuencia del ritmo
   // Valores mayores -> ritmos más rápidos (hasta ~0.33 Hz)
   const double I_drive_so = -8.5;       // Corriente despolarizante a SO
-  const double I_drive_n1m = -6.0;       // Drive a N1M
+  const double I_drive_n1m = -6.0;       // Drive a N1M (más fuerte, es el "líder")
   const double I_drive_n2v = -2.0;       // Drive a N2v (más débil)
   const double I_drive_n3t = 0.0;       // Drive a N3t
+  const double I_drive_cgc = 0.00;      // Drive a CGC
   // BUCLE DE SIMULACIÓN
   for (double time = 0; time < simulation_time; time += step) {
     
@@ -237,11 +348,18 @@ int main(int argc, char **argv) {
     s_so_n1m.step(step);
     s_so_n2v.step(step);
 
+    // Sinapsis de CGC (Benjamin, 2012)
+    s_cgc_n1m.step(step);
+    s_cgc_n2v.step(step);
+    s_cgc_so.step(step);
+    s_cgc_n3t.step(step);
+
     if (time >= t_stim_start && time <= t_stim_end) {
       so.add_synaptic_input(I_drive_so);
       n1m.add_synaptic_input(I_drive_n1m);  
       n2v.add_synaptic_input(I_drive_n2v);
       n3t.add_synaptic_input(I_drive_n3t);
+      cgc.add_synaptic_input(I_drive_cgc);
     }
 
     // Integrar todas las neuronas

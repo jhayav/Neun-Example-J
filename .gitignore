@@ -1,3 +1,7 @@
 build/
 .vscode/
 apuntes/
+*/__pycache__/
+/build
+*.pdf
+/TFG_Juan_Haya

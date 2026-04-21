@@ -157,8 +157,8 @@ int main(int argc, char **argv) {
   const double t_stim_end = 9500;
   
   const double I_drive_n1m = -6.0;
-  const double I_drive_n2v = -1.0;
-  const double I_drive_n3t = -3.0;
+  const double I_drive_n2v = -2.0;
+  const double I_drive_n3t = 0.0;
 
   for (double time = 0; time < simulation_time; time += step) {
     
