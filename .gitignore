@@ -5,3 +5,5 @@ apuntes/
 /build
 *.pdf
 /TFG_Juan_Haya
+resultados_invariantes/*.txt
+resultados_invariantes/*.csv

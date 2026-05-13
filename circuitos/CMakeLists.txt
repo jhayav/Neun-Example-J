@@ -16,5 +16,8 @@ target_link_libraries(cgc)
 add_executable(circuito_gen circuito_gen.cpp)
 target_link_libraries(circuito_gen)
 
+add_executable(cgc_ramp cgc_cpg_ramp.cpp)
+target_link_libraries(cgc_ramp)
+
 # add_executable(cgc_valores cgc_cpg_valores.cpp)
 # target_link_libraries(cgc_valores)

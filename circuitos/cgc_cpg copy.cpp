@@ -323,14 +323,13 @@ int main(int argc, char **argv) {
   syn_cgc_to_n3t.params[Synapse::dec_slope] = 2.5;
   CGCSynapse s_cgc_n3t(cgc, CGCNeuron::v, n3t, Neuron::v, syn_cgc_to_n3t, 1);
 
-
   // PARÁMETROS DE SIMULACIÓN
   const double step = 0.01;              // Paso de integración (ms)
-  const double simulation_time = 10000;  // 10 segundos
+  const double simulation_time = 50000;  // 100 segundos
 
   // Estimulación de SO para activar el CPG (como en Fig. 4C)
   const double t_stim_start = 100;       // Inicio del estímulo (ms)
-  const double t_stim_end = 9500;        // Estímulo casi continuo
+  const double t_stim_end = 45000;        // Estímulo casi continuo
   
   const double I_drive_so = -8.5;       // Corriente despolarizante a SO
   const double I_drive_n1m = -6.0;      // Drive a N1M (más fuerte, es el "líder")
