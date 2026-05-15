@@ -25,7 +25,7 @@ def plot_simulation(target):
         
     df = pd.read_csv(filepath, sep=r'\s+', header=None, names=COL_NAMES)
     
-    fig, axes = plt.subplots(6, 1, figsize=(14, 16), sharex=False)
+    fig, axes = plt.subplots(6, 1, figsize=(14, 16), sharex=True)
     
     t = df['time']
     neurons = ['N1M', 'N2v', 'N3t', 'SO', 'CGC']
@@ -53,6 +53,8 @@ def plot_simulation(target):
     plt.subplots_adjust(hspace=0.5)
     
     out_path = Path("resultados_invariantes") / f"trazos_simulacion_{target}.png"
+    if target == 'CGC':
+        plt.show()
     fig.savefig(out_path, dpi=200, bbox_inches='tight')
     plt.close(fig)
     print(f"  --> Gráfico guardado en: {out_path}\n")

@@ -33,9 +33,16 @@ TARGETS = ['N1M', 'N3t', 'SO', 'CGC']
 
 COL_T, COL_N1M, COL_N2V, COL_N3T, COL_SO, COL_CGC, COL_RAMP = range(7)
 
+# SPIKE_THRESHOLDS = {'N1M': -20.0, 'N2v': -25.0, 'N3t': -20.0}
+# MAX_ISI          = {'N1M': 300.0, 'N2v': 400.0, 'N3t': 600.0}
+# MIN_SPIKES       = {'N1M': 5,     'N2v': 1,     'N3t': 5}
+
+# estudio_invariantes.py - Líneas ~37
 SPIKE_THRESHOLDS = {'N1M': -20.0, 'N2v': -25.0, 'N3t': -20.0}
-MAX_ISI          = {'N1M': 300.0, 'N2v': 400.0, 'N3t': 600.0}
-MIN_SPIKES       = {'N1M': 5,     'N2v': 1,     'N3t': 5}
+# Si ves que la consola te dice "Bursts N1M = 180" pero "Ciclos = 90", 
+# significa que está partiendo los bursts por la mitad. Sube este valor a 500.0 o 600.0.
+MAX_ISI          = {'N1M': 500.0, 'N2v': 300.0, 'N3t': 300.0} 
+MIN_SPIKES       = {'N1M': 3, 'N2v': 2, 'N3t': 3}
 
 TRANSIENT_TIME = 5000.0
 
@@ -55,11 +62,13 @@ RAMP_CONFIG = {
         'c_min': -8.2, 'c_max': -13.0,   'n_steps': 20,
         'nota': 'Paper'
     },
-    'CGC': {
-        'I_SO': -8.5,  'I_N1M': -6.0,    'I_N2v': -2.0,  'I_N3t': 0.0,   'I_CGC': 'RAMPA',
-        'c_min': 0.0,  'c_max': 0.15,    'n_steps': 20,
-        'nota': 'Yo'
-    },
+'CGC': {
+        'I_SO': -8.5, 'I_N1M': -6.0, 'I_N2v': -2.0, 'I_N3t': 0.0, 'I_CGC': 'RAMPA',
+        # Reduce el c_max. Prueba con 0.05 o 0.08 como mucho.
+        # Quieres que el ritmo se acelere, pero no que el CPG muera de sobreexcitación.
+        'c_min': 0.0, 'c_max': 0.06, 'n_steps': 20,
+        'nota': "Yo"
+    }
 }
 RAMP_INTERVAL = 4600.0
 
@@ -454,6 +463,7 @@ def plot_comparison(all_results):
 
     path = OUTPUT_DIR / 'comparacion_R2.png'
     fig.savefig(str(path), dpi=200, bbox_inches='tight')
+    
     plt.close(fig)
     print(f"\n  --> Comparativa: {path.name}")
 
@@ -539,7 +549,6 @@ def main():
     if len(all_results) > 1:
         print("aaaa")
         plot_comparison(all_results)
-
     print(f"\n{'=' * 65}")
     print(f" COMPLETADO. Figuras en: {OUTPUT_DIR}")
     print(f"{'=' * 65}")

@@ -7,3 +7,8 @@ apuntes/
 /TFG_Juan_Haya
 resultados_invariantes/*.txt
 resultados_invariantes/*.csv
+*/data_*.txt
+*/data_*.csv
+*/intervalos_*.txt
+*/intervalos_*.csv
+sim.txt

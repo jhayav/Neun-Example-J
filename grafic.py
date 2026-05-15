@@ -123,6 +123,7 @@ plt.tight_layout()
 plt.savefig('cpg_cgc_completo.png', dpi=150, bbox_inches='tight')
 print("\nGráfica completada y guardada como 'cpg_cgc_completo.png'.")
 
+plt.show()
 print(f"\nRangos de voltaje:")
 print(f"  CGC soma: {v_cgc_soma_cpg.min():.2f} a {v_cgc_soma_cpg.max():.2f} mV")
 print(f"  SO soma: {v_so_soma_cpg.min():.2f} a {v_so_soma_cpg.max():.2f} mV")

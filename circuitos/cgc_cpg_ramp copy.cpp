@@ -82,7 +82,7 @@ if (strcmp(target, "N1M") == 0) {
     // Nuevo: base del circuito cgc_cpg.cpp, rampa en CGC: 0→0.15 (20 steps)
     I_so = -8.5;  I_n1m = -6.0;  I_n2v = -2.0;  I_n3t = 0.0;
     I_cgc = 0.0;
-    c_min = 0.032959;  c_max = 0.1;  n_ramp_steps = 20;
+    c_min = 0.032959;  c_max = 0.05;  n_ramp_steps = 20;
     // c_max = 0.042969;
     ramp_target = 4;
   } else {
@@ -262,7 +262,7 @@ if (strcmp(target, "N1M") == 0) {
   CGCSynapse::ConstructorArgs syn_cgc_to_n1m;
   syn_cgc_to_n1m.params[Synapse::esyn] = 0.0;
   syn_cgc_to_n1m.params[Synapse::gsyn] = 2.0;
-  syn_cgc_to_n1m.params[Synapse::tau_syn] = 2000.0;
+  syn_cgc_to_n1m.params[Synapse::tau_syn] = 175.0;
   syn_cgc_to_n1m.params[Synapse::v_pre] = -67.0;
   syn_cgc_to_n1m.params[Synapse::v_r] = -40.0;
   syn_cgc_to_n1m.params[Synapse::dec_slope] = 2.5;
@@ -271,8 +271,8 @@ if (strcmp(target, "N1M") == 0) {
   // Sinapsis CGC -> N2v (EXCITATORIA POLISINÁPTICA)
   CGCSynapse::ConstructorArgs syn_cgc_to_n2v;
   syn_cgc_to_n2v.params[Synapse::esyn] = 0.0;
-  syn_cgc_to_n2v.params[Synapse::gsyn] = 0.08;
-  syn_cgc_to_n2v.params[Synapse::tau_syn] = 2000.0;
+  syn_cgc_to_n2v.params[Synapse::gsyn] = 0.05;
+  syn_cgc_to_n2v.params[Synapse::tau_syn] = 350.0;
   syn_cgc_to_n2v.params[Synapse::v_pre] = -67.0;
   syn_cgc_to_n2v.params[Synapse::v_r] = -40.0;
   syn_cgc_to_n2v.params[Synapse::dec_slope] = 2.5;
@@ -282,7 +282,7 @@ if (strcmp(target, "N1M") == 0) {
   CGCSynapse::ConstructorArgs syn_cgc_to_so;
   syn_cgc_to_so.params[Synapse::esyn] = 0.0;
   syn_cgc_to_so.params[Synapse::gsyn] = 0.5;
-  syn_cgc_to_so.params[Synapse::tau_syn] = 80.0;
+  syn_cgc_to_so.params[Synapse::tau_syn] = 142.0;
   syn_cgc_to_so.params[Synapse::v_pre] = -67.0;
   syn_cgc_to_so.params[Synapse::v_r] = -40.0;
   syn_cgc_to_so.params[Synapse::dec_slope] = 2.5;
@@ -291,15 +291,15 @@ if (strcmp(target, "N1M") == 0) {
   // Sinapsis CGC -> N3t (EXCITATORIA MONOSINÁPTICA)
   CGCSynapse::ConstructorArgs syn_cgc_to_n3t;
   syn_cgc_to_n3t.params[Synapse::esyn] = 0.0;
-  syn_cgc_to_n3t.params[Synapse::gsyn] = 0.02;
-  syn_cgc_to_n3t.params[Synapse::tau_syn] = 80.0;
+  syn_cgc_to_n3t.params[Synapse::gsyn] = 0.05;
+  syn_cgc_to_n3t.params[Synapse::tau_syn] = 350.0;
   syn_cgc_to_n3t.params[Synapse::v_pre] = -67.0;
   syn_cgc_to_n3t.params[Synapse::v_r] = -40.0;
   syn_cgc_to_n3t.params[Synapse::dec_slope] = 2.5;
   CGCSynapse s_cgc_n3t(cgc, CGCNeuron::v, n3t, Neuron::v, syn_cgc_to_n3t, 1);
   // =================== SIMULACIÓN ===================
   const double step = 0.01;
-  const double t_transient = 50000.0;
+  const double t_transient = 5000.0;
 
   double half_ramp = n_ramp_steps * ramp_interval;
   double total_ramp = 2.0 * half_ramp;  // 1 triángulo completo

@@ -196,9 +196,9 @@ int main(int argc, char **argv) {
   
   // Sinapsis N1M -> N2v (EXCITATORIA LENTA)
   Synapse::ConstructorArgs syn_n1m_to_n2v;
-  syn_n1m_to_n2v.params[Synapse::esyn] = 0.0;        // E_syn = 0 mV (excitatoria)
-  syn_n1m_to_n2v.params[Synapse::gsyn] = 0.077;      // Conductancia (Tabla 2)
-  syn_n1m_to_n2v.params[Synapse::tau_syn] = 200.0;   // tau = 200 ms (lenta)
+  syn_n1m_to_n2v.params[Synapse::esyn] = 0.0;
+  syn_n1m_to_n2v.params[Synapse::gsyn] = 0.077;
+  syn_n1m_to_n2v.params[Synapse::tau_syn] = 200.0;
   syn_n1m_to_n2v.params[Synapse::v_pre] = -67.0;
   syn_n1m_to_n2v.params[Synapse::v_r] = -40.0;
   syn_n1m_to_n2v.params[Synapse::dec_slope] = 2.5;
@@ -206,9 +206,9 @@ int main(int argc, char **argv) {
 
   // Sinapsis N2v -> N1M (INHIBITORIA FUERTE)
   Synapse::ConstructorArgs syn_n2v_to_n1m;
-  syn_n2v_to_n1m.params[Synapse::esyn] = -90.0;      // E_syn = -90 mV
+  syn_n2v_to_n1m.params[Synapse::esyn] = -90.0;
   syn_n2v_to_n1m.params[Synapse::gsyn] = 50.0;
-  syn_n2v_to_n1m.params[Synapse::tau_syn] = 50.0;    // tau = 50 ms
+  syn_n2v_to_n1m.params[Synapse::tau_syn] = 50.0;
   syn_n2v_to_n1m.params[Synapse::v_pre] = -67.0;
   syn_n2v_to_n1m.params[Synapse::v_r] = -40.0;
   syn_n2v_to_n1m.params[Synapse::dec_slope] = 2.5;
@@ -217,7 +217,7 @@ int main(int argc, char **argv) {
   // Sinapsis N1M -> N3t (INHIBITORIA)
   Synapse::ConstructorArgs syn_n1m_to_n3t;
   syn_n1m_to_n3t.params[Synapse::esyn] = -90.0;
-  syn_n1m_to_n3t.params[Synapse::gsyn] = 0.5;        // g_syn = 0.5 (Tabla 2)
+  syn_n1m_to_n3t.params[Synapse::gsyn] = 0.5;
   syn_n1m_to_n3t.params[Synapse::tau_syn] = 50.0;
   syn_n1m_to_n3t.params[Synapse::v_pre] = -67.0;
   syn_n1m_to_n3t.params[Synapse::v_r] = -40.0;
@@ -227,7 +227,7 @@ int main(int argc, char **argv) {
   // Sinapsis N3t -> N1M (INHIBITORIA)
   Synapse::ConstructorArgs syn_n3t_to_n1m;
   syn_n3t_to_n1m.params[Synapse::esyn] = -90.0;
-  syn_n3t_to_n1m.params[Synapse::gsyn] = 8.0;        // g_syn = 8.0 (Tabla 2)
+  syn_n3t_to_n1m.params[Synapse::gsyn] = 8.0;
   syn_n3t_to_n1m.params[Synapse::tau_syn] = 50.0;
   syn_n3t_to_n1m.params[Synapse::v_pre] = -67.0;
   syn_n3t_to_n1m.params[Synapse::v_r] = -40.0;
@@ -237,87 +237,79 @@ int main(int argc, char **argv) {
   // Sinapsis N2v -> N3t (INHIBITORIA)
   Synapse::ConstructorArgs syn_n2v_to_n3t;
   syn_n2v_to_n3t.params[Synapse::esyn] = -90.0;
-  syn_n2v_to_n3t.params[Synapse::gsyn] = 2.0;        // g_syn = 2.0 (Tabla 2)
+  syn_n2v_to_n3t.params[Synapse::gsyn] = 2.0;
   syn_n2v_to_n3t.params[Synapse::tau_syn] = 50.0;
   syn_n2v_to_n3t.params[Synapse::v_pre] = -67.0;
   syn_n2v_to_n3t.params[Synapse::v_r] = -40.0;
   syn_n2v_to_n3t.params[Synapse::dec_slope] = 2.5;
   Synapse s_n2v_n3t(n2v, Neuron::v, n3t, Neuron::v, syn_n2v_to_n3t, 1);
 
-  // SINAPSIS CON SO (Tabla 2, Vavoulis 2007)
-
-  // Sinapsis N2v -> SO (INHIBITORIA) - Inhibe SO durante fase R
+  // Sinapsis N2v -> SO (INHIBITORIA)
   Synapse::ConstructorArgs syn_n2v_to_so;
-  syn_n2v_to_so.params[Synapse::esyn] = -90.0;       // E_syn = -90 mV (inhibitoria)
-  syn_n2v_to_so.params[Synapse::gsyn] = 8.0;         // g_syn = 8.0
-  syn_n2v_to_so.params[Synapse::tau_syn] = 50.0;     // tau = 50 ms
+  syn_n2v_to_so.params[Synapse::esyn] = -90.0;
+  syn_n2v_to_so.params[Synapse::gsyn] = 8.0;
+  syn_n2v_to_so.params[Synapse::tau_syn] = 50.0;
   syn_n2v_to_so.params[Synapse::v_pre] = -67.0;
   syn_n2v_to_so.params[Synapse::v_r] = -40.0;
   syn_n2v_to_so.params[Synapse::dec_slope] = 2.5;
   Synapse s_n2v_so(n2v, Neuron::v, so, Neuron::v, syn_n2v_to_so, 1);
 
-  // Sinapsis SO -> N1M (EXCITATORIA LENTA) - Activa el CPG
+  // Sinapsis SO -> N1M (EXCITATORIA LENTA)
   Synapse::ConstructorArgs syn_so_to_n1m;
-  syn_so_to_n1m.params[Synapse::esyn] = 0.0;         // E_syn = 0 mV (excitatoria)
-  syn_so_to_n1m.params[Synapse::gsyn] = 4.0;         // g_syn = 4.0
-  syn_so_to_n1m.params[Synapse::tau_syn] = 200.0;    // tau = 200 ms (lenta)
+  syn_so_to_n1m.params[Synapse::esyn] = 0.0;
+  syn_so_to_n1m.params[Synapse::gsyn] = 4.0;
+  syn_so_to_n1m.params[Synapse::tau_syn] = 200.0;
   syn_so_to_n1m.params[Synapse::v_pre] = -67.0;
   syn_so_to_n1m.params[Synapse::v_r] = -40.0;
   syn_so_to_n1m.params[Synapse::dec_slope] = 2.5;
   Synapse s_so_n1m(so, Neuron::v, n1m, Neuron::v, syn_so_to_n1m, 1);
 
-  // Sinapsis SO -> N2v (EXCITATORIA LENTA) - Acelera activación de N2v
+  // Sinapsis SO -> N2v (EXCITATORIA LENTA)
   Synapse::ConstructorArgs syn_so_to_n2v;
-  syn_so_to_n2v.params[Synapse::esyn] = 0.0;         // E_syn = 0 mV (excitatoria)
-  syn_so_to_n2v.params[Synapse::gsyn] = 1.0;         // g_syn = 1.0
-  syn_so_to_n2v.params[Synapse::tau_syn] = 200.0;    // tau = 200 ms (lenta)
+  syn_so_to_n2v.params[Synapse::esyn] = 0.0;
+  syn_so_to_n2v.params[Synapse::gsyn] = 1.0;
+  syn_so_to_n2v.params[Synapse::tau_syn] = 200.0;
   syn_so_to_n2v.params[Synapse::v_pre] = -67.0;
   syn_so_to_n2v.params[Synapse::v_r] = -40.0;
   syn_so_to_n2v.params[Synapse::dec_slope] = 2.5;
   Synapse s_so_n2v(so, Neuron::v, n2v, Neuron::v, syn_so_to_n2v, 1);
 
-  // SINAPSIS DE CGC (Benjamin, 2012)
-  // La CGC es una neurona modulatoria que usa sinapsis GradualActivation
-
+  // =================== SINAPSIS CGC ===================
   // Sinapsis CGC -> N1M (EXCITATORIA MONOSINÁPTICA)
-  // CGC modula el CPG excitando N1M directamente (Benjamin, 2012)
   CGCSynapse::ConstructorArgs syn_cgc_to_n1m;
-  syn_cgc_to_n1m.params[Synapse::esyn] = -9.0;        // Excitatoria 
-  syn_cgc_to_n1m.params[Synapse::gsyn] = 3.0;        // Moderada para gating [cite: 474]
-  syn_cgc_to_n1m.params[Synapse::tau_syn] = 175.0;   // Lenta (modulación tónica) 
+  syn_cgc_to_n1m.params[Synapse::esyn] = 0.0;
+  syn_cgc_to_n1m.params[Synapse::gsyn] = 2.0;
+  syn_cgc_to_n1m.params[Synapse::tau_syn] = 2000.0;
   syn_cgc_to_n1m.params[Synapse::v_pre] = -67.0;
   syn_cgc_to_n1m.params[Synapse::v_r] = -40.0;
   syn_cgc_to_n1m.params[Synapse::dec_slope] = 2.5;
   CGCSynapse s_cgc_n1m(cgc, CGCNeuron::v, n1m, Neuron::v, syn_cgc_to_n1m, 1);
 
   // Sinapsis CGC -> N2v (EXCITATORIA POLISINÁPTICA)
-  // Conexión indirecta/débil (Benjamin, 2012)
   CGCSynapse::ConstructorArgs syn_cgc_to_n2v;
-  syn_cgc_to_n2v.params[Synapse::esyn] = -1.0;        // Excitatoria 
-  syn_cgc_to_n2v.params[Synapse::gsyn] = 0.0;        // Necesaria para plateaus en N2v
-  syn_cgc_to_n2v.params[Synapse::tau_syn] = 345.0;   
+  syn_cgc_to_n2v.params[Synapse::esyn] = 0.0;
+  syn_cgc_to_n2v.params[Synapse::gsyn] = 0.08;
+  syn_cgc_to_n2v.params[Synapse::tau_syn] = 2000.0;
   syn_cgc_to_n2v.params[Synapse::v_pre] = -67.0;
   syn_cgc_to_n2v.params[Synapse::v_r] = -40.0;
   syn_cgc_to_n2v.params[Synapse::dec_slope] = 2.5;
   CGCSynapse s_cgc_n2v(cgc, CGCNeuron::v, n2v, Neuron::v, syn_cgc_to_n2v, 1);
 
   // Sinapsis CGC -> SO (EXCITATORIA MONOSINÁPTICA)
-  // CGC excita al SO directamente (Benjamin, 2012)
   CGCSynapse::ConstructorArgs syn_cgc_to_so;
-  syn_cgc_to_so.params[Synapse::esyn] = 10.0;         // Excitatoria 
-  syn_cgc_to_so.params[Synapse::gsyn] = 0.0;         // Refuerza la capacidad del SO
-  syn_cgc_to_so.params[Synapse::tau_syn] = 142.0;    
+  syn_cgc_to_so.params[Synapse::esyn] = 0.0;
+  syn_cgc_to_so.params[Synapse::gsyn] = 0.5;
+  syn_cgc_to_so.params[Synapse::tau_syn] = 80.0;
   syn_cgc_to_so.params[Synapse::v_pre] = -67.0;
   syn_cgc_to_so.params[Synapse::v_r] = -40.0;
   syn_cgc_to_so.params[Synapse::dec_slope] = 2.5;
   CGCSynapse s_cgc_so(cgc, CGCNeuron::v, so, Neuron::v, syn_cgc_to_so, 1);
 
   // Sinapsis CGC -> N3t (EXCITATORIA MONOSINÁPTICA)
-  // CGC excita N3t directamente (Benjamin, 2012)
   CGCSynapse::ConstructorArgs syn_cgc_to_n3t;
-  syn_cgc_to_n3t.params[Synapse::esyn] = -2.0;        // Excitatoria 
-  syn_cgc_to_n3t.params[Synapse::gsyn] = 1.0;        
-  syn_cgc_to_n3t.params[Synapse::tau_syn] = 164.0;   
+  syn_cgc_to_n3t.params[Synapse::esyn] = 0.0;
+  syn_cgc_to_n3t.params[Synapse::gsyn] = 0.02;
+  syn_cgc_to_n3t.params[Synapse::tau_syn] = 80.0;
   syn_cgc_to_n3t.params[Synapse::v_pre] = -67.0;
   syn_cgc_to_n3t.params[Synapse::v_r] = -40.0;
   syn_cgc_to_n3t.params[Synapse::dec_slope] = 2.5;
@@ -326,17 +318,18 @@ int main(int argc, char **argv) {
 
   // PARÁMETROS DE SIMULACIÓN
   const double step = 0.01;              // Paso de integración (ms)
-  const double simulation_time = 10000;  // 10 segundos
+  const double simulation_time = 200000;  // 100 segundos
 
   // Estimulación de SO para activar el CPG (como en Fig. 4C)
   const double t_stim_start = 100;       // Inicio del estímulo (ms)
-  const double t_stim_end = 9500;        // Estímulo casi continuo
+  const double t_stim_end = 199000;        // Estímulo casi continuo
   
   const double I_drive_so = -8.5;       // Corriente despolarizante a SO
   const double I_drive_n1m = -6.0;      // Drive a N1M (más fuerte, es el "líder")
   const double I_drive_n2v = -2.0;      // Drive a N2v (más débil)
   const double I_drive_n3t = 0.0;       // Drive a N3t
-  const double I_drive_cgc = 0.03;      // Drive a CGC 0.0298 es el minimo
+  const double I_drive_cgc = 0.032959;      // Drive a CGC 0.0298 es el minimo
+  // const double I_drive_cgc = 0.042969;     // Drive máximo para CGC (ajustable)
   // BUCLE DE SIMULACIÓN
   for (double time = 0; time < simulation_time; time += step) {
     
