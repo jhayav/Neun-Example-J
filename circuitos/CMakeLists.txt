@@ -24,3 +24,6 @@ target_link_libraries(cgc_ramp)
 
 add_executable(cgc_freq_search cgc_freq_search.cpp)
 target_link_libraries(cgc_freq_search)
+
+add_executable(cgc_cpg_figuras cgc_cpg_figuras.cpp)
+target_link_libraries(cgc_cpg_figuras)

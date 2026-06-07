@@ -318,19 +318,23 @@ int main(int argc, char **argv) {
 
   // PARÁMETROS DE SIMULACIÓN
   const double step = 0.01;              // Paso de integración (ms)
-  const double simulation_time = 30000;  // 100 segundos
+  const double simulation_time = 5000;   // 5 segundos (≈3 ciclos del CPG)
 
-  // Estimulación de SO para activar el CPG (como en Fig. 4C)
+  // Estimulación para activar el CPG
   const double t_stim_start = 100;       // Inicio del estímulo (ms)
-  const double t_stim_end = 29900;        // Estímulo casi continuo
+  const double t_stim_end = 4900;        // Estímulo casi continuo
+
+  // Solo se imprime cada print_every pasos -> reduce el tamaño del fichero
+  const int print_every = 10;
+  int print_counter = 0;
   
   const double I_drive_so = -8.5;       // Corriente despolarizante a SO
   const double I_drive_n1m = -6.0;      // Drive a N1M (más fuerte, es el "líder")
   const double I_drive_n2v = -2.0;      // Drive a N2v (más débil)
   const double I_drive_n3t = 0.0;       // Drive a N3t
-  const double I_drive_cgc = 0.032959;      // Drive a CGC 0.0298 es el minimo
+  // const double I_drive_cgc = 0.032959;      // Drive a CGC 0.0298 es el minimo
   // const double I_drive_cgc = 0.042969;
-  // const double I_drive_cgc = 0.1;
+  const double I_drive_cgc = 0.045;
   // BUCLE DE SIMULACIÓN
   for (double time = 0; time < simulation_time; time += step) {
     
@@ -373,7 +377,10 @@ int main(int argc, char **argv) {
     // I_n1m_n2v(10), I_n2v_n1m(11), I_n1m_n3t(12), I_n3t_n1m(13), I_n2v_n3t(14), I_n2v_so(15), I_so_n1m(16), I_so_n2v(17),
     // I_cgc_n1m(18), I_cgc_n2v(19), I_cgc_so(20), I_cgc_n3t(21),
     // p_N1M(22), p_N2v(23), q_N2v(24), p_N3t(25), q_N3t(26), p_SO(27), h_CGC(28)
-    std::cout << time << " " 
+    print_counter++;
+    if (print_counter < print_every) continue;
+    print_counter = 0;
+    std::cout << time << " "
               // Voltajes (9 valores: 8 del CPG + 1 de CGC)
               << n1m.get(Neuron::v) << " " 
               << n1m.get(Neuron::va) << " "

@@ -12,3 +12,10 @@ resultados_invariantes/*.csv
 */intervalos_*.txt
 */intervalos_*.csv
 sim.txt
+generar_panel_figuras.py
+plot_simulaciones.py
+grafic.py
+cgc_1.txt
+cgc_03.txt
+figuras_data.txt
+figura_invariantes_definiciones.py

@@ -314,11 +314,13 @@ def plot_boxplots(df, target):
 
     ax.set_title(
         f'Variabilidad de intervalos -- Estimulación {target} (CPG+CGC)',
-        fontweight='bold', fontsize=11
+        fontweight='bold', fontsize=14
     )
-    ax.set_xlabel('')
+    ax.set_xlabel('', fontsize=12)
+    ax.set_ylabel('Duración (s)', fontsize=12)
     ax.axhline(0, color='gray', lw=0.5, ls='--')
-    plt.xticks(rotation=45, ha='right', fontsize=8)
+    plt.xticks(rotation=45, ha='right', fontsize=12)
+    plt.yticks(fontsize=12)
     plt.tight_layout()
 
     path = OUTPUT_DIR / f'boxplots_{target}.png'
@@ -370,29 +372,29 @@ def plot_correlations_pairplot(df, target):
             )
 
             lbl = LABELS_PRETTY[key]
-            ax.set_title(f'{lbl}  (R²={r2:.3f}, m={slope:.3f})', fontsize=8)
-            ax.tick_params(labelsize=7)
+            ax.set_title(f'{lbl}  (R²={r2:.3f}, m={slope:.3f})', fontsize=14)
+            ax.tick_params(labelsize=11)
 
             if i == 4:
-                ax.set_xlabel('Period (s)', fontsize=8)
+                ax.set_xlabel('Period (s)', fontsize=12)
             else:
                 ax.set_xlabel('')
             if j == 0:
-                ax.set_ylabel(f'{rtitle} (s)', fontsize=8)
+                ax.set_ylabel(f'{rtitle} (s)', fontsize=12)
             else:
                 ax.set_ylabel('')
 
             ax.annotate(
                 f'R²={r2:.3f}\nm={slope:.3f}',
                 xy=(0.05, 0.95), xycoords='axes fraction',
-                fontsize=7, fontweight='bold', va='top', ha='left',
+                fontsize=16, fontweight='bold', va='top', ha='left',
                 bbox=dict(boxstyle='round,pad=0.3', facecolor='white',
                           edgecolor='gray', alpha=0.85),
             )
 
     fig.suptitle(
         f'Invariantes Dinamicos -- Estimulacion {target} (CPG+CGC)',
-        fontsize=12, fontweight='bold', y=0.995
+        fontsize=18, fontweight='bold', y=0.995
     )
     plt.tight_layout(rect=[0, 0, 1, 0.98])
 

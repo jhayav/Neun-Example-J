@@ -17,13 +17,13 @@ stride = 100
 
 try:
     import pandas as pd
-    df = pd.read_csv('sim.txt', sep=r'\s+', header=None, usecols=usecols, 
+    df = pd.read_csv('cgc_03.txt', sep=r'\s+', header=None, usecols=usecols, 
                      skiprows=lambda x: x % stride != 0)
     data = df.values
 except ImportError:
     print("Pandas no encontrado, usando lectura línea a línea (puede tomar unos minutos)...")
     parsed_data = []
-    with open('sim.txt', 'r') as f:
+    with open('cgc_03.txt', 'r') as f:
         for i, line in enumerate(f):
             if i % stride == 0:
                 parts = line.split()
@@ -52,7 +52,6 @@ fig, axes = plt.subplots(5, 1, figsize=(15, 13), sharex=True)
 # 1. CGC (Cerebral Giant Cell - Neurona Modulatoria)
 ax0 = axes[0]
 ax0.plot(t_cpg[mask_cpg]/1000, v_cgc_soma_cpg[mask_cpg], 'C1', linewidth=0.8, label=r'$V_S$ CGC')
-ax0.axhline(y=-60, color='gray', linestyle='--', alpha=0.5, label=r'$E_{leak}$')
 ax0.set_ylabel(r'$V_{CGC}$ (mV)')
 ax0.set_title('CGC: Cerebral Giant Cell (Neurona Modulatoria)', fontsize=12, fontweight='bold')
 ax0.legend(loc='upper right', fontsize=8)
@@ -61,7 +60,6 @@ ax0.set_ylim([-90, 60])
 # 2. SO (Modulador de Frecuencia)
 ax1 = axes[1]
 ax1.plot(t_cpg[mask_cpg]/1000, v_so_soma_cpg[mask_cpg], 'purple', linewidth=0.8, label=r'$V_S$ SO')
-ax1.axhline(y=-67, color='gray', linestyle='--', alpha=0.5, label=r'$E_{leak}$')
 ax1.set_ylabel(r'$V_{SO}$ (mV)')
 ax1.set_title('SO: Slow Oscillator (Modulador de Frecuencia)', fontsize=12, fontweight='bold')
 ax1.legend(loc='upper right', fontsize=8)
@@ -70,8 +68,6 @@ ax1.set_ylim([-90, 20])
 # 3. N1M (Fase 1 - Protracción)
 ax2 = axes[2]
 ax2.plot(t_cpg[mask_cpg]/1000, v_n1m_soma_cpg[mask_cpg], 'b', linewidth=0.8, label=r'$V_S$ N1M')
-ax2.axhline(y=-67, color='gray', linestyle='--', alpha=0.5, label=r'$E_{leak}$')
-ax2.axhline(y=-30, color='salmon', linestyle=':', alpha=0.7, label=r'$E_{ACh}$')
 ax2.set_ylabel(r'$V_{N1M}$ (mV)')
 ax2.set_title('N1M: Interneurona de Protracción (Fase P)', fontsize=12, fontweight='bold')
 ax2.legend(loc='upper right', fontsize=8)
@@ -80,8 +76,6 @@ ax2.set_ylim([-90, 20])
 # 4. N2v (Fase 2 - Rasp)
 ax3 = axes[3]
 ax3.plot(t_cpg[mask_cpg]/1000, v_n2v_soma_cpg[mask_cpg], 'r', linewidth=0.8, label=r'$V_S$ N2v')
-ax3.axhline(y=-67, color='gray', linestyle='--', alpha=0.5, label=r'$E_{leak}$')
-ax3.axhline(y=55, color='orange', linestyle=':', alpha=0.7, label=r'$E_{NaL}$')
 ax3.set_ylabel(r'$V_{N2v}$ (mV)')
 ax3.set_title('N2v: Interneurona de Rasp (Fase R)', fontsize=12, fontweight='bold')
 ax3.legend(loc='upper right', fontsize=8)
@@ -90,32 +84,22 @@ ax3.set_ylim([-80, 60])
 # 5. N3t (Fase 3 - Swallow)
 ax4 = axes[4]
 ax4.plot(t_cpg[mask_cpg]/1000, v_n3t_soma_cpg[mask_cpg], 'g', linewidth=0.8, label=r'$V_S$ N3t')
-ax4.axhline(y=-67, color='gray', linestyle='--', alpha=0.5, label=r'$E_{leak}$')
-ax4.axhline(y=80, color='brown', linestyle=':', alpha=0.7, label=r'$E_{Ca}$')
 ax4.set_ylabel(r'$V_{N3t}$ (mV)')
 ax4.set_title('N3t: Interneurona de Swallow (Fase S)', fontsize=12, fontweight='bold')
 ax4.legend(loc='upper right', fontsize=8)
 ax4.set_ylim([-90, 100])
-ax4.set_xlim([-2, t_max_plot_cpg/1000])
+ax4.set_xlim([0, t_max_plot_cpg/1000])
 
-# Marcas de tiempo de la simulación (según cpg_cgc.cpp)
-t_stim_start = 100 / 1000   # 0.1 s
-t_stim_end = 45000 / 1000   # 45.0 s
-
-for ax in axes:
-    ax.axvline(x=t_stim_start, color='k', linestyle='--', alpha=0.4)
-    ax.axvline(x=t_stim_end, color='k', linestyle='--', alpha=0.4)
-
-# Etiqueta para la leyenda en el primer subplot
-axes[0].axvline(x=t_stim_start, color='k', linestyle='--', alpha=0.4, label='Estimulación')
-axes[0].legend(loc='upper right', fontsize=8)
-
-# Configurar marcas explícitas en el eje X cada 5 segundos
-ticks = np.arange(0, (t_max_plot_cpg/1000) + 1, 5)
+# Intervalo de ticks adaptativo: ~6-10 marcas independientemente de la duración
+t_max_s = t_max_plot_cpg / 1000
+nice_intervals = [0.5, 1, 2, 5, 10, 15, 20, 30, 60, 120, 300]
+tick_interval = next(iv for iv in nice_intervals if t_max_s / iv <= 10)
+ticks = np.arange(0, t_max_s + tick_interval, tick_interval)
 
 for ax in axes:
     ax.set_xticks(ticks)
     ax.tick_params(labelbottom=True)
+    ax.grid(True, alpha=0.3)
 
 ax4.set_xlabel('Tiempo (s)', fontsize=12, fontweight='bold')
 
