@@ -158,7 +158,6 @@ def run_gen_simulation(genes):
     return v_n1m, v_n2v, v_n3t, v_so
 
 
-# --- FITNESS (compatible con DEAP: devuelve tupla) ---
 
 def evaluate(individual):
     """Calcula fitness = -distancia euclidiana total entre simulación y referencia.
@@ -188,7 +187,7 @@ def evaluate(individual):
     return (-dist_total,)
 
 
-# --- OPERADOR DE MUTACIÓN PERSONALIZADO (respeta límites) ---
+#  OPERADOR DE MUTACIÓN PERSONALIZADO
 
 def mutate_bounded(individual, mu, sigma, indpb):
     """Mutación gaussiana con clipping a los límites de cada gen."""
@@ -228,7 +227,7 @@ def setup_deap():
 
     # Estadísticas
     stats = tools.Statistics(lambda ind: ind.fitness.values[0])
-    stats.register("min_dist", lambda x: -max(x))      # Distancia mínima
+    stats.register("min_dist", lambda x: -max(x))       # Distancia mínima
     stats.register("avg_dist", lambda x: -np.mean(x))   # Distancia media
     stats.register("max_dist", lambda x: -min(x))       # Distancia máxima
 
@@ -238,14 +237,11 @@ def setup_deap():
     return toolbox, stats, hof
 
 
-# --- ALGORITMO GENÉTICO PRINCIPAL ---
 
 def main():
     global REF_SIGNALS
 
-    print("=" * 60)
-    print("  AG con DEAP - Distancia Euclidiana CPG-CGC")
-    print("=" * 60)
+    print("AG con DEAP - Distancia Euclidiana CPG-CGC")
 
     # 1. Obtener señales de referencia (cpg_completo)
     t_ref, ref_n1m, ref_n2v, ref_n3t, ref_so = run_reference()
@@ -266,7 +262,7 @@ def main():
     pop, logbook = algorithms.eaSimple(
         pop, toolbox,
         cxpb=CROSSOVER_RATE,
-        mutpb=1.0,          # Probabilidad de que un individuo sea mutado
+        mutpb=1.0,           # Probabilidad de que un individuo sea mutado
                              # La prob. por gen la controla indpb en mutate_bounded
         ngen=GENERATIONS,
         stats=stats,
@@ -275,9 +271,7 @@ def main():
     )
 
     # 5. Resultados finales
-    print("\n" + "=" * 60)
-    print("  RESULTADOS FINALES")
-    print("=" * 60)
+    print("RESULTADOS FINALES")
 
     best = hof[0]
     best_fit = best.fitness.values[0]

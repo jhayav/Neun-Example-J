@@ -1,7 +1,6 @@
 jhayav@jhayav:~/Escritorio/4carrera/Neun-Example-J/circuitos$ python3 genetic_euclides.py 
-============================================================
-  AG con DEAP - Distancia Euclidiana CPG-CGC
-============================================================
+AG con DEAP - Distancia Euclidiana CPG-CGC
+
 Ejecutando simulación de referencia (cpg_completo)...
   Referencia cargada: 10000 puntos (subsampled)
 
@@ -111,9 +110,7 @@ gen	nevals	min_dist	avg_dist	max_dist
 99 	30    	3300.24 	4377.3  	5792.75 
 100	30    	3320.79 	4397.33 	7177.34 
 
-============================================================
-  RESULTADOS FINALES
-============================================================
+RESULTADOS FINALES
 
 Distancia euclidiana mínima: 3300.2381
 
