@@ -85,7 +85,7 @@ def run_reference():
     Col 7: V_SO_soma,  Col 8: V_SO_axon
     ... (corrientes y gating)
 
-    Retorna: (t, v_n1m, v_n2v, v_n3t, v_so) submuestreados
+    devuelve: (t, v_n1m, v_n2v, v_n3t, v_so) submuestreados
     """
     print("Ejecutando simulación de referencia (cpg_completo)...")
     try:
@@ -123,7 +123,7 @@ def run_gen_simulation(genes):
     Salida de circuito_gen: 6 columnas
     Col 0: tiempo, Col 1: V_CGC, Col 2: V_N1M, Col 3: V_N2v, Col 4: V_N3t, Col 5: V_SO
 
-    Retorna: (v_n1m, v_n2v, v_n3t, v_so) submuestreados, o None si falla
+    devuelve: (v_n1m, v_n2v, v_n3t, v_so) submuestreados, o None si falla
     """
     cmd = [GEN_EXECUTABLE] + [str(g) for g in genes]
     try:
